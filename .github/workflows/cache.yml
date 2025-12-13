@@ -33,3 +33,39 @@ jobs:
         run: |
           echo "cache-hit? -> ${{ steps.demo-cache.outputs.cache-hit }}"
           cat demo-cache/timestamp.txt
+  pip-cache:
+    name: Python pip Cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Cache pip Packages
+        id: pip-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{hashFiles('**/requirements.txt')}}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+    
+      - name: Create Requirements.txt
+        run: |
+          echo "requests==2.31.0" >> requirements.txt
+          echo "numpy==1.26.4" >> requirements.txt
+      - name: Install Dependencies
+        run: |
+          pip3 install -r requirements.txt
+
+      - name: Verify pip Cache status
+        run: |
+          echo "Cache Hit: ${{ steps.pip-cache.outputs.cache-hit }}"
+          pip list
+          echo "---"
+          echo "If cache-hit is 'true', pip used cached packages"
+          echo "If cache-hit is 'false', pip downloaded packages fresh"
