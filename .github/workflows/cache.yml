@@ -52,7 +52,9 @@ jobs:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{hashFiles('**/requirements.txt')}}
           restore-keys: |
+            ${{ runner.os }}-pip-${{hashFiles('**/requirements.txt')}}
             ${{ runner.os }}-pip-
+            ${{ runner.os }}-
     
       - name: Create Requirements.txt
         run: |
