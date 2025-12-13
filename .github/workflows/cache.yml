@@ -24,7 +24,7 @@ jobs:
       
       - name: Save cache
         uses: actions/cache@v4
-        if: steps.demo-cache.outputscache-hit != 'true'
+        if: steps.demo-cache.outputs.cache-hit != 'true'
         with:
           path: demo-cache
           key: demo-cache-v1
