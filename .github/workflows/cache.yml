@@ -71,3 +71,45 @@ jobs:
           echo "---"
           echo "If cache-hit is 'true', pip used cached packages"
           echo "If cache-hit is 'false', pip downloaded packages fresh"
+  use-cached-dependencies:
+    name: Use Cached Dependencies
+    runs-on: ubuntu-latest
+    needs: pip-cache
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Restore Cached pip Packages
+        id: restor-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{hashFiles('**/requirements.txt')}}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{hashFiles('**/requirements.txt')}}
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+        
+      - name: Create Requirements.txt
+        run: |
+          echo "requests==2.31.0" >> requirements.txt
+          echo "numpy==1.26.4" >> requirements.txt
+
+      - name: Install Dependencies
+        run: |
+          pip3 install -r requirements.txt
+
+      - name: Run Application
+        run: |
+          import requests
+          import numpy as np
+          print("successfully imported cached dependencies!")
+          print("requests version:", requests.__version__)
+          print("numpy version:", np.__version__)
+        shell: python
+        
