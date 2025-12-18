@@ -7,15 +7,16 @@ jobs:
   test-python:
     runs-on: ${{ matrix.os}}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: [3.10, 3.11, 3.12, 3.13, 3.14]
-        continue-on-error: [true]
+        python-version: ["3.10", 3.11, 3.12, 3.13, 3.14]
     steps:
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+        continue-on-error: true
       - name: Verify Python Version
         run: |
           echo "Running on OS: ${{ matrix.os }}"
