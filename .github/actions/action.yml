@@ -1,0 +1,34 @@
+name: "Hello World"
+description: "Greet Someone"
+inputs:
+  who-to-greet:
+    description: "Who to greet"
+    required: true
+    default: "Ahmed"
+outputs:
+  random-number:
+    description: "Random Number"
+    value: ${{ steps.random-number-generation.outputs.random-number }}
+runs:
+  using: "composite"
+  steps:
+    - name: "Set Greeting"
+      run: "echo Hello $INPUT_WHO_TO_GREET."
+      shell: bash
+      env:
+        INPUT_WHO_TO_GREET: ${{ inputs.who-to-greet }}
+
+    - name: "Random Nmber Generation"
+      id: random-number-generation
+      run: echo "random-number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
+      shell: bash
+    
+    - name: Set Github Path
+      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
+      shell: bash
+      env:
+        GITHUB_ACTION_PATH: ${{ github.action_path}}
+    
+    - name: Run goodbye.sh
+      run: goodbye.sh
+      shell: bash
