@@ -15,5 +15,5 @@ jobs:
           RANDOM_NUMBER: ${{ steps.foo.outputs.random-number }}
         run: |
           echo "Random Number from Action: $RANDOM_NUMBER"
-          shell: bash
+        shell: bash
 

@@ -24,13 +24,14 @@ runs:
       shell: bash
     
     - name: Set Github Path
-      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
+      run: |
+        echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
       shell: bash
       env:
         GITHUB_ACTION_PATH: ${{ github.action_path}}
     - name: Make goodbye.sh executable
-      run: chmod +x goodbye.sh
+      run: chmod +x $GITHUB_ACTION_PATH/goodbye.sh
       shell: bash
     - name: Run goodbye.sh
-      run: goodbye.sh
+      run: $GITHUB_ACTION_PATH/goodbye.sh
       shell: bash
